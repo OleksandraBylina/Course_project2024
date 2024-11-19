@@ -1,10 +1,4 @@
-//
-// Created by bylin on 07.11.2024.
-//
-#include "DateFinder_string.h"
-#include <ctime>
-#include <iomanip>
-
+#include "DateFinder2_string.h"
 using namespace std;
 
 string months[] = {"January", "February", "March", "April", "May", "June",
@@ -35,27 +29,19 @@ string month_to_name(const string& month) {
     return "";
 }
 
-
 string get_current_datetime() {
     time_t now = time(0);
     tm *ltm = localtime(&now);
-
-
     int year = 1900 + ltm->tm_year;
     int month = 1 + ltm->tm_mon;
     int day = ltm->tm_mday;
-
-
     int hour = ltm->tm_hour;
     int minute = ltm->tm_min;
     int second = ltm->tm_sec;
-
-
     string current_date = to_string(year) + " " + months[month - 1] + " " + to_string(day);
     string current_time = to_string(hour) + ":" +
                           (minute < 10 ? "0" : "") + to_string(minute) + ":" +
                           (second < 10 ? "0" : "") + to_string(second);
-
     return current_date + " " + current_time;
 }
 
@@ -92,7 +78,6 @@ string date_finder(const string& line, int& count) {
 
                     if ((is_year(part1) && is_month_or_day(part2) && is_month_or_day(part3)) ||
                         (is_month_or_day(part1) && is_month_or_day(part2) && is_year(part3))) {
-
                         date = get_current_datetime();
                     }
                 }
@@ -125,12 +110,19 @@ string date_finder(const string& line, int& count) {
 }
 
 void printer(ifstream& inputFile) {
+    ofstream outputFile("string_4.txt");
+    if (!outputFile.is_open()) {
+        cerr << "Failed to open output file: string_4.txt" << endl;
+        return;
+    }
     string line;
     while (getline(inputFile, line)) {
         int count = 0;
         string final_line = date_finder(line, count);
         cout << final_line << endl;
+        outputFile << final_line << endl;
     }
+    outputFile.close();
 }
 
 void file_opener(const string& textfile) {
@@ -144,6 +136,10 @@ void file_opener(const string& textfile) {
 }
 
 int main() {
+    auto start = std::chrono::high_resolution_clock::now();
     file_opener("textfile.txt");
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "Time: " << elapsed.count() << " seconds" << std::endl;
     return 0;
 }

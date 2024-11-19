@@ -1,6 +1,6 @@
 
-#ifndef NUMBERFINDER_H
-#define NUMBERFINDER_H
+#ifndef NUMBER_FINDER_STRING_H
+#define NUMBER_FINDER_STRING_H
 
 #include <iostream>
 #include <fstream>
@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <chrono>
 
 // Оголошення функцій
 

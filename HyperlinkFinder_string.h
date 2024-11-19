@@ -1,10 +1,11 @@
-#ifndef HYPERLINKFINDER_H
-#define HYPERLINKFINDER_H
+#ifndef HYPERLINK_FINDER_STRING_H
+#define HYPERLINK_FINDER_STRING_H
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cctype>
+#include <chrono>
 
 // Оголошення функцій
 

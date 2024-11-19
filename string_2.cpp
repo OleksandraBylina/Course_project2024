@@ -2,10 +2,8 @@
 
 using namespace std;
 
-
 string months[] = {"January", "February", "March", "April", "May", "June",
                    "July", "August", "September", "October", "November", "December"};
-
 
 bool is_digits(const string& str) {
     for (char c : str) {
@@ -23,7 +21,6 @@ bool is_year(const string& part) {
 bool is_month_or_day(const string& part) {
     return part.length() == 2 && is_digits(part);
 }
-
 
 string month_to_name(const string& month) {
     int month_number = stoi(month);
@@ -108,12 +105,19 @@ string date_finder(const string& line, int& count) {
 }
 
 void printer(ifstream& inputFile) {
+    ofstream outputFile("string_2.txt");
+    if (!outputFile.is_open()) {
+        cerr << "Failed to open output file: string_2.txt" << endl;
+        return;
+    }
     string line;
     while (getline(inputFile, line)) {
         int count = 0;
         string final_line = date_finder(line, count);
         cout << final_line << endl;
+        outputFile << final_line << endl;
     }
+    outputFile.close();
 }
 
 void file_opener(const string& textfile) {
@@ -127,6 +131,10 @@ void file_opener(const string& textfile) {
 }
 
 int main() {
+    auto start = std::chrono::high_resolution_clock::now();
     file_opener("textfile.txt");
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "Time: " << elapsed.count() << " seconds" << std::endl;
     return 0;
 }

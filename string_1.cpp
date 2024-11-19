@@ -77,6 +77,11 @@ int* begin_of_word_finder(const string& line, int& count) {
 }
 
 void printer(ifstream& inputFile) {
+    ofstream outputFile("string_1.txt");
+    if (!outputFile.is_open()) {
+        cerr << "Failed to open output file: string_1.txt" << endl;
+        return;
+    }
     string line;
     while (getline(inputFile, line)) {
         int beginning_count = 0;
@@ -86,8 +91,9 @@ void printer(ifstream& inputFile) {
 
         for (int i = 0; i < beginning_count; ++i) {
             string final_line = line.substr(beginning_of_the_word[i], endings[i] - beginning_of_the_word[i]);
-            if (final_line != ""){
+            if (final_line != "") {
                 cout << final_line << endl;
+                outputFile << final_line << endl;
             }
         }
 
@@ -95,6 +101,7 @@ void printer(ifstream& inputFile) {
         delete[] endings;
         delete[] beginning_of_the_word;
     }
+    outputFile.close();
 }
 
 void file_opener(const string& textfile) {
@@ -108,6 +115,10 @@ void file_opener(const string& textfile) {
 }
 
 int main() {
+    auto start = std::chrono::high_resolution_clock::now();
     file_opener("textfile.txt");
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "Time: " << elapsed.count() << " seconds" << std::endl;
     return 0;
 }

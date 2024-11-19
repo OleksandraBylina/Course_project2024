@@ -1,10 +1,11 @@
-#ifndef DATE_FINDER_STRING_H
-#define DATE_FINDER_STRING_H
+#ifndef DATE_FINDER2_STRING_H
+#define DATE_FINDER2_STRING_H
 
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <ctime>
+#include <chrono>
 
 /**
  * @brief Масив назв місяців англійською.

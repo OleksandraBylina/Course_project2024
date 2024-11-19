@@ -1,13 +1,6 @@
-#include <iostream>
-#include <regex>
-#include <fstream>
-#include <string>
-#include <iomanip>
-#include <sstream>
-#include <cmath>
+#include "NumberFinder_regex.h"
 
 using namespace std;
-
 
 string punkt_number(string num) {
     float number = stof(num);
@@ -15,7 +8,6 @@ string punkt_number(string num) {
     out << fixed << setprecision(4) << number;
     return out.str();
 }
-
 
 string comma_number(string num) {
     size_t pos = num.find(',');
@@ -27,7 +19,6 @@ string comma_number(string num) {
     out << fixed << setprecision(4) << number;
     return out.str();
 }
-
 
 string e_number(string num) {
     size_t Epos = num.find('E');
@@ -50,7 +41,6 @@ string e_number(string num) {
     }
     return num;
 }
-
 
 string number_unificator(const string& number) {
     if (number.find('.') != string::npos) {
@@ -85,7 +75,6 @@ bool is_part_of_date_time(const string& line, size_t match_pos, size_t match_len
     return false;
 }
 
-
 string number_finder(const string& line) {
     regex number_pattern(R"(\b-?\d+(?:[.,]\d+)?(?:[eE][+-]?\d+)?\b)");
 
@@ -98,7 +87,6 @@ string number_finder(const string& line) {
 
         if (regex_search(search_start, result.cend(), match, number_pattern)) {
             size_t match_pos = distance(result.cbegin(), match.position(0) + search_start);
-
 
             if (is_part_of_date_time(result, match_pos, match.length(0))) {
                 search_start_pos = match_pos + match.length(0);
@@ -117,15 +105,20 @@ string number_finder(const string& line) {
     return result;
 }
 
-
 void printer(ifstream& inputFile) {
+    ofstream outputFile("regex_3.txt");
+    if (!outputFile.is_open()) {
+        cerr << "Failed to open output file: regex_3.txt" << endl;
+        return;
+    }
     string line;
     while (getline(inputFile, line)) {
         string final_line = number_finder(line);
         cout << final_line << endl;
+        outputFile << final_line << endl;
     }
+    outputFile.close();
 }
-
 
 void file_opener(const string& textfile) {
     ifstream inputFile(textfile.c_str());
@@ -138,6 +131,16 @@ void file_opener(const string& textfile) {
 }
 
 int main() {
+
+    auto start = std::chrono::high_resolution_clock::now();
+
     file_opener("textfile.txt");
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double> elapsed = end - start;
+
+    std::cout << "Time: " << elapsed.count() << " seconds" << std::endl;
+
     return 0;
 }

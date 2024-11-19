@@ -1,5 +1,6 @@
-#ifndef NUMBERFORMATTER_H
-#define NUMBERFORMATTER_H
+
+#ifndef NUMBER_FINDER_REGEX_H
+#define NUMBER_FINDER_REGEX_H
 
 #include <iostream>
 #include <regex>
@@ -8,6 +9,7 @@
 #include <iomanip>
 #include <sstream>
 #include <cmath>
+#include <chrono>
 
 // Оголошення функцій
 

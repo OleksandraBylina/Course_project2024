@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include "HyperlinkFinder_stringh.h"
 
 #define MAX_LINE_LENGTH 1000
 
@@ -11,7 +8,6 @@ int* end_of_word_finder(const char* line, int* count);
 int* begin_of_word_finder(const char* line, int* count);
 void printer(FILE* inputFile);
 void file_opener(const char* textfile);
-
 
 int* hyperlink_beginning_finder(const char* line, int* count) {
     const char* types[] = {"https://", "http://", "www.", "ftp://"};
@@ -29,7 +25,6 @@ int* hyperlink_beginning_finder(const char* line, int* count) {
     return massive_of_indexes;
 }
 
-
 int* hyperlink_ending_finder(const char* line, int* massive_of_beginnings, int count) {
     int* massive_of_endings = (int*)malloc(count * sizeof(int));
 
@@ -43,7 +38,6 @@ int* hyperlink_ending_finder(const char* line, int* massive_of_beginnings, int c
 
     return massive_of_endings;
 }
-
 
 int* end_of_word_finder(const char* line, int* count) {
     int beginning_count = 0;
@@ -66,7 +60,6 @@ int* end_of_word_finder(const char* line, int* count) {
     return massive_of_word_endings;
 }
 
-
 int* begin_of_word_finder(const char* line, int* count) {
     int beginning_count = *count;
     int* endings = end_of_word_finder(line, &beginning_count);
@@ -87,8 +80,12 @@ int* begin_of_word_finder(const char* line, int* count) {
     return massive_of_word_beginnings;
 }
 
-
 void printer(FILE* inputFile) {
+    FILE* outputFile = fopen("string_h_1.txt", "w");
+    if (outputFile == NULL) {
+        fprintf(stderr, "Failed to open output file: string_h_1.txt\n");
+        return;
+    }
     char line[MAX_LINE_LENGTH];
     while (fgets(line, MAX_LINE_LENGTH, inputFile)) {
         int beginning_count = 0;
@@ -96,20 +93,21 @@ void printer(FILE* inputFile) {
         int* beginnings = hyperlink_beginning_finder(line, &beginning_count);
         int* endings = hyperlink_ending_finder(line, beginnings, beginning_count);
 
-        printf("Hyperlinks in line:\n");
         for (int i = 0; i < beginning_count; ++i) {
             for (int j = beginning_of_the_word[i]; j < endings[i]; ++j) {
                 putchar(line[j]);
+                fputc(line[j], outputFile);
             }
-            printf("\n");
+            putchar('\n');
+            fputc('\n', outputFile);
         }
 
         free(beginnings);
         free(endings);
         free(beginning_of_the_word);
     }
+    fclose(outputFile);
 }
-
 
 void file_opener(const char* textfile) {
     FILE* inputFile = fopen(textfile, "r");
@@ -122,6 +120,15 @@ void file_opener(const char* textfile) {
 }
 
 int main() {
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
     file_opener("textfile.txt");
+    end = clock();
+
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Time: %.6f seconds\n", cpu_time_used);
+
     return 0;
 }

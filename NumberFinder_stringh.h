@@ -1,11 +1,13 @@
-#ifndef NUMBERFORMATTER_H
-#define NUMBERFORMATTER_H
+
+#ifndef NUMBER_FINDER_STRING_H_H
+#define NUMBER_FINDER_STRING_H_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+#include <time.h>
 
 // Оголошення функцій
 

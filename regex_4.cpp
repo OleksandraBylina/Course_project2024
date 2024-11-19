@@ -1,13 +1,4 @@
-//
-// Created by bylin on 17.11.2024.
-//
-
-#include <iostream>
-#include <regex>
-#include <fstream>
-#include <string>
-#include <ctime>
-#include <iomanip>
+#include "DateFinder2_regex.h"
 
 using namespace std;
 
@@ -22,29 +13,19 @@ string month_to_name(const string& month) {
     return "";
 }
 
-// Функция для получения текущей даты и времени
 string get_current_datetime() {
     time_t now = time(0);
     tm *ltm = localtime(&now);
-
-    // Получение текущего года, месяца и дня
     int year = 1900 + ltm->tm_year;
     int month = 1 + ltm->tm_mon;
     int day = ltm->tm_mday;
-
-    // Получение текущего времени
     int hour = ltm->tm_hour;
     int minute = ltm->tm_min;
     int second = ltm->tm_sec;
-
-    // Формирование строки с текущей датой и временем
     string current_date = to_string(year) + " " + months[month - 1] + " " + to_string(day);
-
-    // Форматирование времени с ведущими нулями
     string current_time = to_string(hour) + ":" +
                           (minute < 10 ? "0" : "") + to_string(minute) + ":" +
                           (second < 10 ? "0" : "") + to_string(second);
-
     return current_date + " " + current_time;
 }
 
@@ -68,28 +49,27 @@ string date_finder(const string& line) {
     string result = line;
     string::const_iterator search_start = result.cbegin();
     while (regex_search(search_start, result.cend(), match, date_pattern)) {
-        // Получаем текущую дату и время
         string current_datetime = get_current_datetime();
-
-        // Определяем позицию совпадения
         size_t pos = match.position(0) + distance(result.cbegin(), search_start);
-
-        // Заменяем найденную дату на текущую дату и время
         result.replace(pos, match.length(0), current_datetime);
-
-        // Обновляем позицию для дальнейшего поиска
         search_start = result.cbegin() + pos + current_datetime.length();
     }
-
     return result;
 }
 
 void printer(ifstream& inputFile) {
+    ofstream outputFile("regex_4.txt");
+    if (!outputFile.is_open()) {
+        cerr << "Failed to open output file: regex_4.txt" << endl;
+        return;
+    }
     string line;
     while (getline(inputFile, line)) {
         string final_line = date_finder(line);
         cout << final_line << endl;
+        outputFile << final_line << endl;
     }
+    outputFile.close();
 }
 
 void file_opener(const string& textfile) {
@@ -103,6 +83,10 @@ void file_opener(const string& textfile) {
 }
 
 int main() {
+    auto start = std::chrono::high_resolution_clock::now();
     file_opener("textfile.txt");
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "Time: " << elapsed.count() << " seconds" << std::endl;
     return 0;
 }
